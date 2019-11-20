@@ -16,7 +16,7 @@ If yes, and assuming you have a working version of python3 in your computer, ple
 ```
 pip install pyCardDeck numpy
 
-git clone git@github.com:zfountas/exploding-kittens-challenge.git
+git clone https://github.com/zfountas/exploding-kittens-challenge.git
 
 cd exploding-kittens-challenge
 
