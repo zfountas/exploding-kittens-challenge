@@ -10,7 +10,7 @@ evaluation of your solution.
 
 import pyCardDeck
 from pyCardDeck.cards import BaseCard
-from random import randrange
+from random import randrange, shuffle
 import importlib
 from sys import argv
 from base_player import BasePlayer
@@ -42,6 +42,10 @@ class TacocatCard(KittenCard):
 
 class OverweightCard(KittenCard):
     def __init__(self, name: str = "Overweight Bikini Cat"):
+        super().__init__(name)
+
+class CatsSchrodinger(KittenCard):
+    def __init__(self, name: str = "Cat's Schrodinger"):
         super().__init__(name)
 
 class ShuffleCard(KittenCard):
@@ -84,16 +88,20 @@ class FavorCard(KittenCard):
 
 class Game:
 
-    def __init__(self, players: list):
+    def __init__(self, players: list, verbose: bool=True):
+        self.verbose = verbose
         self.deck = pyCardDeck.Deck()
         self.players = players
         self.prepare_cards()
+        self.deck.shuffle()
         self.deal_to_players()
         self.add_defuses()
         self.add_explodes()
+        self.deck.shuffle()
+        #print([c.name for c in self.deck])
         while 1 < len(self.players) < len(self.deck):
             self.play()
-        print('The winner is', self.players[0].name)
+        if self.verbose: print('The winner is', self.players[0].name)
 
     def play(self):
         i = 0
@@ -101,21 +109,21 @@ class Game:
             self.players[i].hand.append(self.deck.draw())
             self.players[i].turn()
             if len(self.players[i].hand) > 0 and self.players[i].hand[-1].name == 'Exploding Kitten':
-                print('Player',self.players[i].name, 'explodes!!')
+                if self.verbose: print('Player',self.players[i].name, 'explodes!!')
                 del self.players[i]
             else:
                 i += 1
-        print('Deck:',len(self.deck), [len(player.hand) for player in self.players])
+        if self.verbose: print('Deck:',len(self.deck), [len(player.hand) for player in self.players])
 
     def turn(self):
         print('Turn not used!')
 
     def prepare_cards(self):
-        #print("Preparing deck from which to deal to players")
+        if self.verbose: print("Preparing deck from which to deal to players")
         self.deck.add_many(construct_deck(self))
 
     def deal_to_players(self):
-        #print("Dealing cards to players")
+        if self.verbose: print("Dealing cards to players")
         for _ in range(4):
             for player in self.players:
                 player.hand.append(self.deck.draw())
@@ -127,11 +135,11 @@ class Game:
         return noped
 
     def add_explodes(self):
-        #print("Adding explodes to the deck")
+        if self.verbose: print("Adding explodes to the deck")
         self.deck.add_many([ExplodeCard() for _ in range(len(self.players) - 1)])
 
     def add_defuses(self):
-        #print("Adding defuses to the deck")
+        if self.verbose: print("Adding defuses to the deck")
         self.deck.add_many([DefuseCard(self.deck) for _ in range(6 - len(self.players))])
 
     def play_card(self, card: KittenCard, player: BasePlayer = None, target: BasePlayer = None):
@@ -155,6 +163,10 @@ def construct_deck(game: Game):
         OverweightCard(),
         OverweightCard(),
         OverweightCard(),
+        CatsSchrodinger(),
+        CatsSchrodinger(),
+        CatsSchrodinger(),
+        CatsSchrodinger(),
         ShuffleCard(game.deck),
         ShuffleCard(game.deck),
         ShuffleCard(game.deck),
@@ -185,14 +197,28 @@ def construct_deck(game: Game):
     return card_list
 
 
-print('Starting..')
-
-all_players = []
+all_modules = [[], []]
 for i in range(1, len(argv)):
     module = importlib.import_module(argv[i])
-    all_players.append(module.Player(argv[i]))
+    all_modules[0].append(module)
+    all_modules[1].append(argv[i])
 
-game = Game(all_players)
+print('Starting with',len(all_modules[0]),'players...')
+
+hall_of_fame = {}
+for trials in range(1000):
+    all_players = []
+    for module, player_name in zip(all_modules[0],all_modules[1]):
+        all_players.append(module.Player(player_name))
+    shuffle(all_players)
+    game = Game(all_players,verbose=False)
+    winner = game.players[0].name
+
+    if winner not in hall_of_fame.keys():
+        hall_of_fame[winner] = 0
+    hall_of_fame[winner] += 1
+
+print('Result:', hall_of_fame)
 
 """
 zaf = Player()

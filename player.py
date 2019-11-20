@@ -14,7 +14,7 @@ class Player(BasePlayer):
 
     def turn(self):
         if self.hand[-1].name == 'Exploding Kitten':
-            print('A player might explode..')
+            #print('A player might explode..')
             for card in self.hand:
                 if card.name == 'Defuse':
                     self.hand.pop()
