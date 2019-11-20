@@ -13,7 +13,7 @@ class Player(BasePlayer):
         super().__init__(name)
 
     #You must return any card you are discarding from this function.
-    def turn(self, num_players, last_card):
+    def turn(self, game):
         if self.hand[-1].name == 'Exploding Kitten':
             #print('A player might explode..')
             for card in self.hand:
