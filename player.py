@@ -12,13 +12,15 @@ class Player(BasePlayer):
     def __init__(self,name):
         super().__init__(name)
 
-    def turn(self):
+    #You must return any card you are discarding from this function.
+    def turn(self, game):
         if self.hand[-1].name == 'Exploding Kitten':
             #print('A player might explode..')
             for card in self.hand:
                 if card.name == 'Defuse':
                     self.hand.pop()
                     card.effect(self,self)
+                    return card
     def skip(self):
         pass
 

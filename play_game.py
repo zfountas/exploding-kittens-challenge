@@ -98,6 +98,7 @@ class Game:
         self.add_defuses()
         self.add_explodes()
         self.deck.shuffle()
+        self.last_card = None
         #print([c.name for c in self.deck])
         while 1 < len(self.players) < len(self.deck):
             self.play()
@@ -108,7 +109,7 @@ class Game:
         while i < len(self.players):
             self.players[i].use_hand()
             self.players[i].hand.append(self.deck.draw())
-            self.players[i].turn()
+            self.last_card = self.players[i].turn(self)
             if len(self.players[i].hand) > 0 and self.players[i].hand[-1].name == 'Exploding Kitten':
                 if self.verbose: print('Player',self.players[i].name, 'explodes!!')
                 del self.players[i]
