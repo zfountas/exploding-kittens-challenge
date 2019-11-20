@@ -4,7 +4,7 @@ class BasePlayer:
         self.hand = []
     def use_hand(self):
         pass
-    def turn(self):
+    def turn(self, game):
         pass
     def skip(self):
         pass
