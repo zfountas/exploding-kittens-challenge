@@ -1,48 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-This is an example of pyCardDeck, it's not meant to be complete poker script,
-but rather a showcase of pyCardDeck's usage.
+This is heavily based on an example of the library pyCardDeck.
+It is taken from: https://pycarddeck.readthedocs.io/en/latest/examples/kittens.html
 """
 
 import pyCardDeck
 from pyCardDeck.cards import BaseCard
 from random import randrange
-import numpy as np 
-
-
-class Player:
-    def __init__(self):
-        self.hand = []
-
-    def turn(self):
-        if self.hand[-1].name == 'Exploding Kitten':
-            print('A player might explode..')
-            for card in self.hand:
-                if card.name == 'Defuse':
-                    self.hand.pop()
-                    card.effect(self,self)
-    def skip(self):
-        pass
-
-    def take_turn_twice(self):
-        self.turn()
-        self.turn()
-
-    def nope_prompt(self) -> bool:
-        for card in self.hand:
-            if card.name == "Nope":
-                if input("Do you want to use your Nope card?").lower().startswith("y"):
-                    return True
-                else:
-                    return False
-        return False
-
-    def insert_explode(self) -> int:
-        #position = int(input("At which position from top do you want to insert Exploding Kitten back into the deck?"))
-        position = np.random.randint(2)
-        return position
-
+import numpy as np
 
 class KittenCard(BaseCard):
 

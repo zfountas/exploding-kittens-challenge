@@ -2,13 +2,13 @@
 
 
 #### Do you speak python 3?
-If not, exit(We hope to see you next year).
+If not, `exit(We hope to see you next year)`.
 
 #### Do you know how to play the card game exploding kittens?
 If not, [go there](https://explodingkittens.com/how-to-play).
 
 #### Do you want to build an AI player and try to beat everyone else?
-If not, exit(We hope to see you next year).
+If not, `exit(We hope to see you next year)`.
 
 #### Are you still here?
 If yes, and assuming you have a working version of python3 in your computer, please type in a terminal:
@@ -28,3 +28,5 @@ Now there are three python files in this folder. Your goal is to work on the fil
 ```
 python play_game.py player player <your_name>
 ```
+
+When you feel you're ready, please email the file with your name to `f@emotech.co`.
