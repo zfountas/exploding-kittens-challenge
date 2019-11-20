@@ -29,4 +29,8 @@ Now there are three python files in this folder. Your goal is to work on the fil
 python play_game.py player player <your_name>
 ```
 
-When you feel you're ready, please email the file with your name to `f@emotech.co`.
+The more cards your bot takes into account the more chances it has to win.
+
+Of course, intelligence is not only determined by knowledge ;)
+
+When you feel you're ready, please email the file with your name to [f@emotech.co](f@emotech.co).

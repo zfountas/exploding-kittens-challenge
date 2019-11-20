@@ -3,107 +3,84 @@
 """
 This is heavily based on an example of the library pyCardDeck.
 It is taken from: https://pycarddeck.readthedocs.io/en/latest/examples/kittens.html
+
+There is no point in changing this file as this is what will be used for the
+evaluation of your solution.
 """
 
 import pyCardDeck
 from pyCardDeck.cards import BaseCard
 from random import randrange
-import numpy as np
+import importlib
+from sys import argv
+from base_player import BasePlayer
+
 
 class KittenCard(BaseCard):
-
     def __init__(self, name: str, targetable: bool = False, selfcast: bool = False):
         super().__init__(name)
         self.selfcast = selfcast
         self.targetable = targetable
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         pass
 
-
 class ExplodeCard(KittenCard):
-
     def __init__(self, name: str = "Exploding Kitten"):
         super().__init__(name)
 
-
 class DefuseCard(KittenCard):
-
     def __init__(self, deck: pyCardDeck.deck, name: str = "Defuse"):
         super().__init__(name, selfcast=True)
         self.deck = deck
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         position = player.insert_explode()
         self.deck.add_single(ExplodeCard(), position=position)
 
-
 class TacocatCard(KittenCard):
-
     def __init__(self, name: str = "Tacocat"):
         super().__init__(name)
 
-
 class OverweightCard(KittenCard):
-
     def __init__(self, name: str = "Overweight Bikini Cat"):
         super().__init__(name)
 
-
 class ShuffleCard(KittenCard):
-
     def __init__(self, deck: pyCardDeck.Deck, name: str = "Shuffle"):
         super().__init__(name)
         self.deck = deck
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         self.deck.shuffle()
 
-
 class AttackCard(KittenCard):
-
     def __init__(self, name: str = "Attack"):
         super().__init__(name, selfcast=True, targetable=True)
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         player.skip()
         target.take_turn_twice()
 
-
 class SeeTheFuture(KittenCard):
-
     def __init__(self, deck: pyCardDeck.Deck, name: str = "See The Future"):
         super().__init__(name)
         self.deck = deck
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         self.deck.show_top(3)
 
-
 class NopeCard(KittenCard):
-
     def __init__(self, name: str = "Nope"):
         super().__init__(name)
 
-
 class SkipCard(KittenCard):
-
     def __init__(self, name: str = "Skip"):
         super().__init__(name, selfcast=True)
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         player.skip()
 
-
 class FavorCard(KittenCard):
-
     def __init__(self, name: str = "Favor"):
         super().__init__(name, targetable=True, selfcast=True)
-
-    def effect(self, player: Player, target: Player):
+    def effect(self, player: BasePlayer, target: BasePlayer):
         random_target_card = target.hand.pop(randrange(target.hand))
         player.hand.append(random_target_card)
-
 
 class Game:
 
@@ -116,7 +93,7 @@ class Game:
         self.add_explodes()
         while 1 < len(self.players) < len(self.deck):
             self.play()
-        print('The winner is', self.players[0])
+        print('The winner is', self.players[0].name)
 
     def play(self):
         i = 0
@@ -124,7 +101,7 @@ class Game:
             self.players[i].hand.append(self.deck.draw())
             self.players[i].turn()
             if len(self.players[i].hand) > 0 and self.players[i].hand[-1].name == 'Exploding Kitten':
-                print('Player',self.players[i], 'explodes!!')
+                print('Player',self.players[i].name, 'explodes!!')
                 del self.players[i]
             else:
                 i += 1
@@ -134,11 +111,11 @@ class Game:
         print('Turn not used!')
 
     def prepare_cards(self):
-        print("Preparing deck from which to deal to players")
+        #print("Preparing deck from which to deal to players")
         self.deck.add_many(construct_deck(self))
 
     def deal_to_players(self):
-        print("Dealing cards to players")
+        #print("Dealing cards to players")
         for _ in range(4):
             for player in self.players:
                 player.hand.append(self.deck.draw())
@@ -150,14 +127,14 @@ class Game:
         return noped
 
     def add_explodes(self):
-        print("Adding explodes to the deck")
+        #print("Adding explodes to the deck")
         self.deck.add_many([ExplodeCard() for _ in range(len(self.players) - 1)])
 
     def add_defuses(self):
-        print("Adding defuses to the deck")
+        #print("Adding defuses to the deck")
         self.deck.add_many([DefuseCard(self.deck) for _ in range(6 - len(self.players))])
 
-    def play_card(self, card: KittenCard, player: Player = None, target: Player = None):
+    def play_card(self, card: KittenCard, player: BasePlayer = None, target: BasePlayer = None):
         if card.selfcast and player is None:
             raise Exception("You must pass a player who owns the card!")
         elif card.targetable and target is None:
@@ -210,14 +187,19 @@ def construct_deck(game: Game):
 
 print('Starting..')
 
+all_players = []
+for i in range(1, len(argv)):
+    module = importlib.import_module(argv[i])
+    all_players.append(module.Player(argv[i]))
 
-#import jaras_file
+game = Game(all_players)
 
+"""
 zaf = Player()
 jara = Player()
 alex = Player()
-
 game = Game([zaf,jara,alex])
+"""
 
 
 

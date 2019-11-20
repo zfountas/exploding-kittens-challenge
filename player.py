@@ -5,10 +5,12 @@ This is what you need to change!
 Feel free to do anything you want with this file, as long as it doesn't break
 the rules of the game. We will figure it out :)
 """
+import numpy as np
+from base_player import BasePlayer
 
-class Player:
-    def __init__(self):
-        self.hand = []
+class Player(BasePlayer):
+    def __init__(self,name):
+        super().__init__(name)
 
     def turn(self):
         if self.hand[-1].name == 'Exploding Kitten':
