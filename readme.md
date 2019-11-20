@@ -26,7 +26,7 @@ cp player.py <your_name>.py
 Now there are three python files in this folder. Your goal is to work on the file with your name, and in particular to change the class Player and develop a bot that is able to play this game. To test your bot, please type
 
 ```
-python play_game.py player player <your_name>
+python play_game.py player player player <your_name>
 ```
 
 The more cards your bot takes into account the more chances it has to win.
