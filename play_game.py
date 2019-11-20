@@ -60,7 +60,7 @@ class AttackCard(KittenCard):
         super().__init__(name, selfcast=True, targetable=True)
     def effect(self, player: BasePlayer, target: BasePlayer):
         player.skip()
-        target.take_turn_twice()
+        target.take_turn_twice(self)
 
 class SeeTheFuture(KittenCard):
     def __init__(self, deck: pyCardDeck.Deck, name: str = "See The Future"):
