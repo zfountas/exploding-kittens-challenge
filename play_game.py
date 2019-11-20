@@ -106,6 +106,7 @@ class Game:
     def play(self):
         i = 0
         while i < len(self.players):
+            self.players[i].use_hand()
             self.players[i].hand.append(self.deck.draw())
             self.players[i].turn()
             if len(self.players[i].hand) > 0 and self.players[i].hand[-1].name == 'Exploding Kitten':
